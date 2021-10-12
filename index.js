@@ -226,3 +226,70 @@ function viewEmployees() {
           .then(() => loadMainPrompts())
       })
   }
+
+  function viewRoles() {
+    db.findRoles()
+      .then(([rows]) => {
+        let roles = rows;
+        console.log("\n");
+        console.table(roles);
+      })
+      .then(() => loadMainPrompts());
+  }
+  
+  function addRole() {
+    db.findDepartments()
+      .then(([rows]) => {
+        let departments = rows;
+        const departmentOptions = departments.map(({ id, name }) => ({
+          name: name,
+          value: id
+        }));
+  
+        prompt([
+          {
+            name: "title",
+            message: "What is the name of the role?"
+          },
+          {
+            name: "salary",
+            message: "What is the salary of the role?"
+          },
+          {
+            type: "list",
+            name: "department_id",
+            message: "Which department does the role belong to?",
+            choices: departmentOptions
+          }
+        ])
+          .then(role => {
+            db.createRole(role)
+              .then(() => console.log(`Added ${role.title} to the database`))
+              .then(() => loadMainPrompts())
+          })
+      })
+  }
+  
+  function deleteRole() {
+    db.findRoles()
+      .then(([rows]) => {
+        let roles = rows;
+        const roleOptions = roles.map(({ id, title }) => ({
+          name: title,
+          value: id
+        }));
+  
+        prompt([
+          {
+            type: "list",
+            name: "roleId",
+            message:
+              "Which role do you want to delete? (Warning: This will also delete employees with this role)",
+            choices: roleOptions
+          }
+        ])
+          .then(res => db.deleteRole(res.roleId))
+          .then(() => console.log("Deleted role from the database"))
+          .then(() => loadMainPrompts())
+      })
+  }
