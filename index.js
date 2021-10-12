@@ -293,3 +293,90 @@ function viewEmployees() {
           .then(() => loadMainPrompts())
       })
   }
+
+  function updateEmployeeRole() {
+    db.findEmployees()
+      .then(([rows]) => {
+        let employees = rows;
+        const employeeOptions = employees.map(({ id, first_name, last_name }) => ({
+          name: `${first_name} ${last_name}`,
+          value: id
+        }));
+  
+        prompt([
+          {
+            type: "list",
+            name: "employeeId",
+            message: "Which employee's role do you want to update?",
+            choices: employeeOptions
+          }
+        ])
+          .then(res => {
+            let employeeId = res.employeeId;
+            db.findRoles()
+              .then(([rows]) => {
+                let roles = rows;
+                const roleOptions = roles.map(({ id, title }) => ({
+                  name: title,
+                  value: id
+                }));
+  
+                prompt([
+                  {
+                    type: "list",
+                    name: "roleId",
+                    message: "Which role do you want to assign the selected employee?",
+                    choices: roleOptions
+                  }
+                ])
+                  .then(res => db.updateEmployeeRole(employeeId, res.roleId))
+                  .then(() => console.log("Updated employee's role"))
+                  .then(() => loadMainPrompts())
+              });
+          });
+      })
+  }
+  
+  function updateEmployeeManager() {
+    db.findEmployees()
+      .then(([rows]) => {
+        let employees = rows;
+        const employeeOptions = employees.map(({ id, first_name, last_name }) => ({
+          name: `${first_name} ${last_name}`,
+          value: id
+        }));
+  
+        prompt([
+          {
+            type: "list",
+            name: "employeeId",
+            message: "Which employee's manager do you want to update?",
+            choices: employeeOptions
+          }
+        ])
+          .then(res => {
+            let employeeId = res.employeeId
+            db.findManagers(employeeId)
+              .then(([rows]) => {
+                let managers = rows;
+                const managerOptions = managers.map(({ id, first_name, last_name }) => ({
+                  name: `${first_name} ${last_name}`,
+                  value: id
+                }));
+  
+                prompt([
+                  {
+                    type: "list",
+                    name: "managerId",
+                    message:
+                      "Which employee do you want to set as manager for the selected employee?",
+                    choices: managerOptions
+                  }
+                ])
+                  .then(res => db.updateEmployeeManager(employeeId, res.managerId))
+                  .then(() => console.log("Updated employee's manager"))
+                  .then(() => loadMainPrompts())
+              })
+          })
+      })
+  }
