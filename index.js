@@ -437,4 +437,9 @@ function viewEmployees() {
       })
       .then(() => loadMainPrompts());
   }
+
+  function quit() {
+    console.log("Have a great Day!");
+    process.exit();
+  }
   
