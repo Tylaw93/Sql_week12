@@ -380,3 +380,50 @@ function viewEmployees() {
           })
       })
   }
+
+  function viewDepartments() {
+    db.findDepartments()
+      .then(([rows]) => {
+        let departments = rows;
+        console.log("\n");
+        console.table(departments);
+      })
+      .then(() => loadMainPrompts());
+  }
+  
+  function addDepartment() {
+    prompt([
+      {
+        name: "name",
+        message: "What is the name of the department?"
+      }
+    ])
+      .then(res => {
+        let name = res;
+        db.createDepartment(name)
+          .then(() => console.log(`Added ${name.name} to the database`))
+          .then(() => loadMainPrompts())
+      })
+  }
+  
+  function deleteDepartment() {
+    db.findDepartments()
+      .then(([rows]) => {
+        let departments = rows;
+        const departmentOptions = departments.map(({ id, name }) => ({
+          name: name,
+          value: id
+        }));
+  
+        prompt({
+          type: "list",
+          name: "departmentId",
+          message:
+            "Which department would you like to delete? (Warning: This will also delete associated roles and employees)",
+          choices: departmentOptions
+        })
+          .then(res => db.deleteDepartment(res.departmentId))
+          .then(() => console.log(`Deleted department from the database`))
+          .then(() => loadMainPrompts())
+      })
+  }
