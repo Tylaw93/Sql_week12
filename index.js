@@ -108,7 +108,7 @@ function loadPrompts() {
         deleteDepartment();
         break;
       case "VIEW_BUDGET_BY_DEPARTMENT":
-        viewUtilizedBudgetByDepartment();
+        viewBudgetByDepartment();
         break;
       case "VIEW_ROLES":
         viewRoles();
@@ -427,3 +427,14 @@ function viewEmployees() {
           .then(() => loadMainPrompts())
       })
   }
+
+  function viewBudgetByDepartment() {
+    db.viewDepartmentBudgets()
+      .then(([rows]) => {
+        let departments = rows;
+        console.log("\n");
+        console.table(departments);
+      })
+      .then(() => loadMainPrompts());
+  }
+  
