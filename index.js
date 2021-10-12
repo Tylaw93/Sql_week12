@@ -28,8 +28,8 @@ function loadPrompts() {
           value: "ADD_EMPLOYEE"
         },
         {
-          name: "Remove Employee",
-          value: "REMOVE_EMPLOYEE"
+          name: "Delete Employee",
+          value: "DELETE_EMPLOYEE"
         },
         {
           name: "Update Manager",
@@ -44,8 +44,8 @@ function loadPrompts() {
             value: "ADD_DEPARTMENT"
           },
           {
-            name: "Remove Department",
-            value: "REMOVE_DEPARTMENT"
+            name: "Delete Department",
+            value: "DELETE_DEPARTMENT"
           },
           {
             name: "View Total Budget By Department",
@@ -60,8 +60,8 @@ function loadPrompts() {
           value: "ADD_ROLE"
         },
         {
-          name: "Remove Role",
-          value: "REMOVE_ROLE"
+          name: "Delete Role",
+          value: "DELETE_ROLE"
         },
         {
             name: "Update Employee Role",
@@ -73,5 +73,55 @@ function loadPrompts() {
         }
       ]
     }
-  ])
+  ]).then(res => {
+    let choice = res.choice;
+    
+    switch (choice) {
+      case "VIEW_EMPLOYEES":
+        viewEmployees();
+        break;
+      case "VIEW_EMPLOYEES_BY_DEPARTMENT":
+        viewEmployeesByDepartment();
+        break;
+      case "VIEW_EMPLOYEES_BY_MANAGER":
+        viewEmployeesByManager();
+        break;
+      case "ADD_EMPLOYEE":
+        addEmployee();
+        break;
+      case "DELETE_EMPLOYEE":
+        DeleteEmployee();
+        break;
+      case "UPDATE_EMPLOYEE_ROLE":
+        updateEmployeeRole();
+        break;
+      case "UPDATE_EMPLOYEE_MANAGER":
+        updateEmployeeManager();
+        break;
+      case "VIEW_DEPARTMENTS":
+        viewDepartments();
+        break;
+      case "ADD_DEPARTMENT":
+        addDepartment();
+        break;
+      case "DELETE_DEPARTMENT":
+        deleteDepartment();
+        break;
+      case "VIEW_BUDGET_BY_DEPARTMENT":
+        viewUtilizedBudgetByDepartment();
+        break;
+      case "VIEW_ROLES":
+        viewRoles();
+        break;
+      case "ADD_ROLE":
+        addRole();
+        break;
+      case "DELETE_ROLE":
+        DeleteRole();
+        break;
+      default:
+        quit();
+    }
+  }
+  )
 }
