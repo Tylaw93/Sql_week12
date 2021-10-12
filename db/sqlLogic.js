@@ -42,3 +42,17 @@ class DB {
       [managerId, employeeId]
     );
   }
+
+  findAllRoles() {
+    return this.connection.promise().query(
+      "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
+    );
+  }
+
+  createRole(role) {
+    return this.connection.promise().query("INSERT INTO role SET ?", role);
+  }
+
+  deleteRole(roleId) {
+    return this.connection.promise().query("DELETE FROM role WHERE id = ?", roleId);
+  }
